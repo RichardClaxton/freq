@@ -1,12 +1,18 @@
--module(f).
--export([run/0,mapper/2]).
+%%
+%% This code is as seen and can be used and distributed freely
+%% Richard Claxton 5 - Nov - 2012
+%%
 
-run() ->
-	FullBook = loadFile("r.txt"),
-	TokenList = (string:tokens(FullBook," \r\n")),
+-module(f).
+-export([run/1,mapper/2]).
+
+run(FileToLoad) ->
+	FullBook = loadFile(FileToLoad),
+	TokenList = (string:tokens(FullBook," \r\n,.-")),
 	Mapper = fun(X,Acc) -> f:mapper(X,Acc) end,
 	WC = lists:foldl(Mapper,[],TokenList),
-	io:format("Word Count -> ~p~n",[WC]).
+	file:write_file("./output.txt", io_lib:fwrite("~p.\n", [WC])),
+	io:format("Done").
 
 loadFile(FileName) ->
 	io:format("Loading... ~n"),
